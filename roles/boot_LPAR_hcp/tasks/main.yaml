@@ -86,9 +86,17 @@
       ansible.builtin.set_fact:
         installation_disk_path: "{% if hcp.data_plane.lpar.disk_type | lower == 'fcp' %}ccw-{{ hcp.data_plane.lpar.nodes[item].lun[0].paths[0].fcp }}-fc-{{ hcp.data_plane.lpar.nodes[item].lun[0].paths[0].wwpn }}-lun-{{ hcp.data_plane.lpar.nodes[item].lun[0].id }}{% endif %}{% if hcp.data_plane.lpar.disk_type | lower == 'dasd' %}ccw-0.0.{{ hcp.data_plane.lpar.nodes[item].dasd.disk_id }}{% endif %}"
     
+    - name: Test 
+      debug: 
+        msg: "Installation disk path is {{ installation_disk_path }}"
+
     - name: Getting installation disk path 
       shell: oc get agents -n {{ hcp.control_plane.hosted_cluster_name }}-agents -o json | jq -r '.items[].metadata.annotations["agent.agent-install.openshift.io/inventory"] | fromjson | .disks[] | select(.by_path == "/dev/disk/by-path/{{ installation_disk_path }}") | .path'
       register: installation_disk_path_name
+
+    - name: test2
+      debug:
+        msg: "Installation disk path name is {{ installation_disk_path_name.stdout }}"
      
     - name: Approve agents 	
       shell: oc -n {{ hcp.control_plane.hosted_cluster_name }}-agents  patch agent {{ agent_name.stdout.split(' ')[0]  }} -p '{"spec":{"installation_disk_id":"/dev/{{ installation_disk_path_name.stdout }}","approved":true,"hostname":"compute-{{ item }}.{{hcp.control_plane.hosted_cluster_name }}.{{ hcp.control_plane.basedomain }}"}}' --type merge
