@@ -15,6 +15,7 @@
     url: "{{ initrd.stdout }}"
     dest: /var/lib/libvirt/images/pxeboot/initrd.img
     validate_certs: false
+    timeout: 60
   when: ( hcp.data_plane.kvm.boot_method | lower != 'iso' and hcp.compute_node_type | lower == 'kvm' ) or hcp.compute_node_type | lower != 'kvm'
 
 - name: Get URL for kernel.img
