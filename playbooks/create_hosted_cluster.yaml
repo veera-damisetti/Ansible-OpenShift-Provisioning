@@ -1,5 +1,4 @@
 ---
-
 - name: Install Prerequisites on kvm_host
   hosts: kvm_host_hcp
   become: true
