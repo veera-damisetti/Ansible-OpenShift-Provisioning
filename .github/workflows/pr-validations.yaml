@@ -1,4 +1,4 @@
-name: Pull Request Checks
+name: Metadata_Validator
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   check-pr-title:
-    name: Ensure PR Title Standards
+    name: PR Title Linter
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR title syntax
@@ -18,17 +18,37 @@ jobs:
 
             const match = title.match(/^(\w+):\s.+/);
             if (!match) {
-              core.setFailed(`❌ PR title "${title}" does not match the pattern "prefix: title"`);
+              core.setFailed(
+                `Invalid PR title format: "${title}"\n\n` +
+                `PR title must follow this format -> prefix: descriptive message\n\n` +
+                `Example -> feat: Add optional setup_file_server.yaml playbook\n\n` +
+                `Allowed keywords:\n` +
+                `  - {"type": "feat", "section": "Features"}\n` +
+                `  - {"type": "fix", "section": "Bug Fixes"}\n` +
+                `  - {"type": "chore", "section": "Miscellaneous"}\n` +
+                `  - {"type": "docs", "section": "Documentation"}\n` +
+                `  - {"type": "perf", "section": "Performance"}\n` +
+                `  - {"type": "test", "section": "Tests"}\n\n` +
+                `This format helps organize changelogs and enforces clarity.`
+              );
               return;
             }
 
             const keyword = match[1];
             if (!validKeywords.includes(keyword)) {
-              core.setFailed(`❌ Invalid PR keyword "${keyword}". Must be one of: ${validKeywords.join(', ')}`);
+              core.setFailed(`Invalid Prefix "${keyword}"\n` +
+              `Allowed keywords:\n` +
+                `  - {"type": "feat", "section": "Features"}\n` +
+                `  - {"type": "fix", "section": "Bug Fixes"}\n` +
+                `  - {"type": "chore", "section": "Miscellaneous"}\n` +
+                `  - {"type": "docs", "section": "Documentation"}\n` +
+                `  - {"type": "perf", "section": "Performance"}\n` +
+                `  - {"type": "test", "section": "Tests"}\n\n`
+                );
             }
 
   check-pr-description:
-    name: Validate PR Description
+    name: PR Description Validator
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR description presence
@@ -38,5 +58,5 @@ jobs:
             const body = context.payload.pull_request?.body || '';
 
             if (!body.trim()) {
-              core.setFailed('❌ PR description (body) must not be empty.');
+              core.setFailed('PR description (body) must not be empty.');
             }
