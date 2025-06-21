@@ -3,6 +3,7 @@
 - name: Wait for All Cluster Operators to be available
   shell: oc get co --kubeconfig=/root/ansible_workdir/hcp-kubeconfig --no-headers| awk '$3 != "True" {print $1}' | wc -l
   register: co
+  
   until: co.stdout == '0'
   retries: 60
   delay: 20
