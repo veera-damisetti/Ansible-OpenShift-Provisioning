@@ -27,14 +27,18 @@ jobs:
                 name: 'lgtm'
               });
             }
-            
-      - name: Wait for 30 seconds
-        run: sleep 30
 
       - name: Check for "lgtm" label
         uses: actions/github-script@v7
         with:
           script: |
+            const prNumber = context.payload.pull_request.number;
+            const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
             const labels = context.payload.pull_request.labels.map(label => label.name);
             if (!labels.includes("lgtm")) {
               core.setFailed("Pull Request must have the 'lgtm' label before it can be merged.");
