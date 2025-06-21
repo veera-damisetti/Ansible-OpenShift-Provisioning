@@ -28,6 +28,9 @@ jobs:
               });
             }
             
+      - name: Wait for 30 seconds
+        run: sleep 30
+
       - name: Check for "lgtm" label
         uses: actions/github-script@v7
         with:
