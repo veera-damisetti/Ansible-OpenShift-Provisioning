@@ -39,7 +39,7 @@ jobs:
               issue_number: prNumber
             });
 
-            const labels = context.payload.pull_request.labels.map(label => label.name);
-            if (!labels.includes("lgtm")) {
+            const labelNames = labels.map(label => label.name);
+            if (!labelNames.includes("lgtm")) {
               core.setFailed("Pull Request must have the 'lgtm' label before it can be merged.");
             }
