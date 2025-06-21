@@ -42,5 +42,3 @@
 - name: Display oc login command for CLI
   debug:
     msg: " You can access the Hosted Cluster using CLI : oc login {{ api_server.stdout_lines[0].split(': ')[-1] }} -u kubeadmin -p {{ cluster_password_decoded.stdout_lines[0] }} "
-
-
