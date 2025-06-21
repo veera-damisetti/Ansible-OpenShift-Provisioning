@@ -6,7 +6,7 @@ on:
 
 jobs:
   check-pr-title:
-    name: PR Title Linter
+    name: PR_Title_Linter
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR title syntax
@@ -48,7 +48,7 @@ jobs:
             }
 
   check-pr-description:
-    name: PR Description Validator
+    name: PR_Description_Validator
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR description presence
