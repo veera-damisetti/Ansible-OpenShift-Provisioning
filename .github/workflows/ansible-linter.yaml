@@ -2,7 +2,7 @@ name: Ansible_Syntax_Checks
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 
 jobs:
   ansible-lint:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for full diff comparison
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,7 +33,6 @@ jobs:
       - name: Run ansible-lint on changed Ansible files
         run: |
           files=$(git diff --name-only --diff-filter=ACMRT upstream/${{ github.base_ref }} -- '*.yml' '*.yaml')
-
           
           if [[ -z "$files" ]]; then
             echo "No Ansible files changed"
