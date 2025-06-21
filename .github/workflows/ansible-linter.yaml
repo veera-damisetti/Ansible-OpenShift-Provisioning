@@ -32,7 +32,7 @@ jobs:
 
       - name: Run ansible-lint on changed Ansible files
         run: |
-          files=$(git diff --name-only upstream/${{ github.base_ref }})
+          files=$(git diff --name-only upstream/${{ github.base_ref }} | grep -E '\.(yml|yaml)$')
           
           if [[ -z "$files" ]]; then
             echo "No Ansible files changed"
