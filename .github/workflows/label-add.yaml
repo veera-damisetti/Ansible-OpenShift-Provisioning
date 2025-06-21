@@ -1,5 +1,5 @@
 # This workflow checks if a pull request has the "lgtm" label before it can be merged.
-name: Add Labels
+name: Require LGTM Label
 
 on:
   issue_comment:
@@ -45,6 +45,3 @@ jobs:
             });
 
             console.log(`Applied 'lgtm' label via comment by ${commentUser}.`);
-
-  call-reusable:
-    uses: ./.github/workflows/label_validator.yaml
