@@ -4,8 +4,8 @@ name: Require LGTM Label
 on:
   pull_request:
     types: [labeled, unlabeled, opened, edited, synchronize, reopened]
-  issues:
-    types: [labeled]
+  issue_comment:
+    types: [created]
 
 jobs:
   check-lgtm-label:
