@@ -10,6 +10,24 @@ jobs:
     name: Label_Validator
     runs-on: ubuntu-latest
     steps:
+      - name: Remove "lgtm" label on new commits
+        if: github.event.action == 'synchronize'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const labels = context.payload.pull_request.labels.map(label => label.name);
+
+            if (labels.includes('lgtm')) {
+              console.log("Removing 'lgtm' label due to new commit.");
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                name: 'lgtm'
+              });
+            }
+            
       - name: Check for "lgtm" label
         uses: actions/github-script@v7
         with:
