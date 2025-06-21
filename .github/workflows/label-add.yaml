@@ -1,0 +1,47 @@
+# This workflow checks if a pull request has the "lgtm" label before it can be merged.
+name: Require LGTM Label
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  check-lgtm-label:
+    name: Label_Validator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Handle /lgtm comment command
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '/lgtm')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commentUser = context.payload.comment.user.login;
+            const prNumber = context.payload.issue.number;
+
+            // Check if the issue is a pull request
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            // Check if commenter is a requested reviewer or has write access
+            const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: commentUser
+            });
+
+            if (permission.permission !== 'write' && permission.permission !== 'admin' && permission.permission !== 'maintain') {
+              console.log(`User ${commentUser} does not have permission to apply lgtm.`);
+              return;
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: ['lgtm']
+            });
+
+            console.log(`Applied 'lgtm' label via comment by ${commentUser}.`);
