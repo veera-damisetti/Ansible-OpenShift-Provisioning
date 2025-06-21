@@ -20,8 +20,8 @@ jobs:
             if (!match) {
               core.setFailed(
                 `Invalid PR title format: "${title}"\n\n` +
-                `PR title must follow this format: prefix: descriptive message\n\n` +
-                `Example: feat: Add optional setup_file_server.yaml playbook\n\n` +
+                `PR title must follow this format -> prefix: descriptive message\n\n` +
+                `Example -> feat: Add optional setup_file_server.yaml playbook\n\n` +
                 `Allowed keywords:\n` +
                 `  - {"type": "feat", "section": "Features"}\n` +
                 `  - {"type": "fix", "section": "Bug Fixes"}\n` +
@@ -36,7 +36,7 @@ jobs:
 
             const keyword = match[1];
             if (!validKeywords.includes(keyword)) {
-              core.setFailed(`Invalid Prefix "${keyword}"` +
+              core.setFailed(`Invalid Prefix "${keyword}"\n` +
               `Allowed keywords:\n` +
                 `  - {"type": "feat", "section": "Features"}\n` +
                 `  - {"type": "fix", "section": "Bug Fixes"}\n` +
