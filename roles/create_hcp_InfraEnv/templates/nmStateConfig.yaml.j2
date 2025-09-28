@@ -17,7 +17,9 @@ spec:
           address:
             - ip: "{{ hcp.data_plane.kvm.ip_params.static_ip.ip[item] }}"
               prefix-length: 16
-          dhcp: false
+          dhcp: false  
+        ipv6:
+          enabled: false
     routes:
       config:
         - destination: 0.0.0.0/0
