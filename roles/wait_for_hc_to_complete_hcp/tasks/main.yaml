@@ -18,6 +18,8 @@
   shell: oc whoami --show-console --kubeconfig=/root/ansible_workdir/hcp-kubeconfig
   register: console_url
 
+
+
 - name: Get Password for Hosted Cluster
   shell: oc get secret kubeadmin-password -n "{{ hcp.control_plane.clusters_namespace }}-{{ hcp.control_plane.hosted_cluster_name }}" -o yaml | grep -i 'password:'
   register: cluster_password_encoded
